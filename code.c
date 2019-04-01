@@ -52,7 +52,6 @@ if(Mix_OpenAudio(44100,MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS,1024)==-1)
 {printf("%s",Mix_GetError());}
 
 music=Mix_LoadMUS("MusiqueMenu.mp3");
-Mix_PlayMusic (music,-1);
 
    
    
@@ -63,7 +62,8 @@ Mix_PlayMusic (music,-1);
 
 
                 while(SDL_PollEvent(&event))
-                {
+                {Mix_PlayMusic (music,-1);
+
                         switch(event.type)
                         {
                                 case SDL_QUIT:
@@ -111,10 +111,30 @@ Mix_PlayMusic (music,-1);
 					break;
 				case SDL_MOUSEBUTTONUP:
         			if ((event.button.button == SDL_BUTTON_LEFT)&&(x>=exitpos.x && x<=exitpos.x+exitpos.w && y>=exitpos.y && y<=exitpos.y+exitpos.h))
+										{
+					SDL_FreeSurface(menu);
+					SDL_FreeSurface(cursor);
+					SDL_FreeSurface(settings);
+					SDL_FreeSurface(credits);
+					SDL_FreeSurface(play);
+					SDL_FreeSurface(exit);
+
 					return(0);
-            				
-        		break;
-					
+                                        
+					}
+            			
+				if ((event.button.button == SDL_BUTTON_LEFT)&&(x>=playpos.x && x<=playpos.x+playpos.w && y>=playpos.y && y<=playpos.y+playpos.h))	
+					{printf("baaaaa");
+SDL_FreeSurface(menu);
+					SDL_FreeSurface(cursor);
+					SDL_FreeSurface(settings);
+					SDL_FreeSurface(credits);
+					SDL_FreeSurface(play);
+					SDL_FreeSurface(exit);				     
+					return(2);
+                                        
+					}
+				break;
 						
 			}
 
@@ -126,8 +146,7 @@ Mix_PlayMusic (music,-1);
 		   SDL_BlitSurface(exit,NULL,screen,&exitpos);
 		   SDL_BlitSurface(cursor,NULL,screen,&cursorpos);
 		   SDL_Flip(screen);
-		
-     
+		  
 
 
                 
@@ -144,9 +163,26 @@ Mix_PlayMusic (music,-1);
 
 }
 
+
+
+int afficherbackground(SDL_Surface* screen)
+
+{
+int x,y;
+SDL_Surface *background=NULL;
+ SDL_Rect position;
+position.x=0;
+position.y=0;
+background=IMG_Load("lvl1.png");
+SDL_BlitSurface(background,NULL,screen,&position);
+SDL_Flip(screen);
+
+}
+
+
 int main(void)
 {
-SDL_Surface *screen = NULL;
+SDL_Surface *screen = NULL,*background = NULL;
   
 int continuer = 1;
 SDL_Event event;
@@ -157,20 +193,26 @@ screen = SDL_SetVideoMode(952,535, 32, SDL_HWSURFACE | SDL_DOUBLEBUF);
 Mix_Music* music;
 
      
- while (continuer)
+ while (continuer==1)
     {
         
         continuer=showmenu(screen,music);
-	
-   }
+    }
 
-   
+printf("%d",continuer);
+ while (continuer == 2)
+    {printf("11");
+	continuer=afficherbackground(screen);
+    }
+
+
+ 
     
    
 
      Mix_FreeMusic(music);
     Mix_CloseAudio();
-   
+   SDL_FreeSurface(screen);
     SDL_Quit();
 
     return EXIT_SUCCESS;
