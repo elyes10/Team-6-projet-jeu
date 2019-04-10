@@ -14,7 +14,7 @@ void init_enigme(enigme * e)
 		
 void generate_afficher (SDL_Surface * screen  , char image [],enigme *e,int *alea)
 { 
-	int test=*alea ;
+	
 	srand(time(NULL));
  *alea = 1+ rand()%3;
 
@@ -44,7 +44,7 @@ int solution_e (char image [])
  	return solution;
  }
 
-void resolution (int * running,int *run,int *r )
+void resolution (int *r )
 {
 	SDL_Event event ;
   	int continuer=1;
